@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from ..currency import Currency
 
-__all__ = ('ProductInfo',)
+__all__ = ("ProductInfo",)
 
 
 @dataclass(frozen=True)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from enum import Enum
 
-__all__ = ('Currency',)
+__all__ = ("Currency",)
 
 
 class Currency(Enum):
@@ -10,10 +10,10 @@ class Currency(Enum):
 
     @staticmethod
     def from_string(currency: str) -> Currency:
-        if currency in {'USD', 'usd'}:
+        if currency in {"USD", "usd"}:
             return Currency.USD
 
-        if currency in {'EUR', 'eur'}:
+        if currency in {"EUR", "eur"}:
             return Currency.EUR
 
-        raise Exception(f'Unknown currency {currency}')
+        raise Exception(f"Unknown currency {currency}")
