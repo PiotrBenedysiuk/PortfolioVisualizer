@@ -3,7 +3,7 @@ import requests
 from .requests_protocol import RequestsProtocol
 from ..service import Service
 
-__all__ = ('requests_service',)
+__all__ = ("requests_service",)
 
 
 class _RequestsWrapper:
@@ -14,6 +14,4 @@ class _RequestsWrapper:
         return requests.post(*args, **kwargs)
 
 
-requests_service: Service[RequestsProtocol] = Service(
-    value=_RequestsWrapper
-)
+requests_service: Service[RequestsProtocol] = Service(value=_RequestsWrapper)

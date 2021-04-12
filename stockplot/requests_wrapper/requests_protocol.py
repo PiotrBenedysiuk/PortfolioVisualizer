@@ -2,7 +2,7 @@ from typing import Protocol
 
 from .response_protocol import ResponseProtocol
 
-__all__ = ('RequestsProtocol',)
+__all__ = ("RequestsProtocol",)
 
 
 class RequestsProtocol(Protocol):
@@ -11,4 +11,3 @@ class RequestsProtocol(Protocol):
 
     def post(self, *args, **kwargs) -> ResponseProtocol:
         ...
-

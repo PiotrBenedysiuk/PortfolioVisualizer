@@ -1,10 +1,9 @@
 from typing import TypeVar, Optional, Callable
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Service(T):
-
     def __init__(self, value: Callable[[], T]) -> None:
         self._value = value
         self._overloaded: Optional[Callable[[], T]] = None

@@ -2,7 +2,7 @@ from .de_giro_factory import DeGiroFactory
 from ..requests_wrapper.requests_service import requests_service
 from ..service import Service
 
-__all__ = ('de_giro_factory_service',)
+__all__ = ("de_giro_factory_service",)
 
 
 def _get_factory() -> DeGiroFactory:
@@ -10,6 +10,4 @@ def _get_factory() -> DeGiroFactory:
     return DeGiroFactory(requests=requests)
 
 
-de_giro_factory_service: Service[DeGiroFactory] = Service(
-    value=_get_factory
-)
+de_giro_factory_service: Service[DeGiroFactory] = Service(value=_get_factory)

@@ -1,6 +1,6 @@
 from typing import Protocol, Dict
 
-__all__ = ('ResponseProtocol',)
+__all__ = ("ResponseProtocol",)
 
 
 class ResponseProtocol(Protocol):
