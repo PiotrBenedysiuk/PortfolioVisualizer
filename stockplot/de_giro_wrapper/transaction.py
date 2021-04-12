@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass
 
-__all__ = ('Transaction',)
+__all__ = ("Transaction",)
 
 
 @dataclass(frozen=True)
