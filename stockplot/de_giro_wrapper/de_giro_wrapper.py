@@ -9,7 +9,7 @@ import pytz
 from .product_info import ProductInfo
 from .transaction import Transaction
 from ..currency import Currency
-from stockplot.requests_wrapper.requests_protocol import RequestsProtocol
+from ..requests_wrapper.requests_protocol import RequestsProtocol
 
 __all__ = ("DeGiroWrapper",)
 

@@ -7,7 +7,7 @@ __all__ = ("de_giro_factory_service",)
 
 def _get_factory() -> DeGiroFactory:
     requests = requests_service.get()
-    return DeGiroFactory(requests=requests)
+    return DeGiroFactory(requests_factory=requests)
 
 
 de_giro_factory_service: Service[DeGiroFactory] = Service(value=_get_factory)

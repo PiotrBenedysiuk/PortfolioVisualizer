@@ -1,11 +1,12 @@
 import json
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Dict
+from json import JSONDecodeError
+from typing import List, Dict, Tuple
 
 from stockplot.requests_wrapper.response_protocol import ResponseProtocol
 
-__all__ = ("MockTraffic", "MockRequests", "RequestMethod")
+__all__ = ("MockTraffic", "MockRequests", "RequestMethod", "MockJsonResponse")
 
 
 class RequestMethod(Enum):
@@ -15,10 +16,29 @@ class RequestMethod(Enum):
 
 @dataclass
 class MockTraffic:
-    args: List
+    args: Tuple
     kwargs: Dict
     method: RequestMethod
     response: ResponseProtocol
+
+
+@dataclass
+class MockJsonResponse:
+    status_code: int
+    _json: Dict
+
+    def json(self) -> Dict:
+        return self._json
+
+
+@dataclass
+class MockResponseWithoutJson:
+    status_code: int
+
+    def json(self) -> Dict:
+        raise JSONDecodeError(
+            "Expecting value: line 1 column 1 (char 0).", doc="", pos=0
+        )
 
 
 class MockRequests:
@@ -27,12 +47,12 @@ class MockRequests:
         self._index = 0
 
     def get(self, *args, **kwargs) -> ResponseProtocol:
-        return self._get(RequestMethod.GET, *args, *kwargs)
+        return self._get(RequestMethod.GET, args, kwargs)
 
     def post(self, *args, **kwargs) -> ResponseProtocol:
-        return self._get(RequestMethod.POST, *args, *kwargs)
+        return self._get(RequestMethod.POST, args, kwargs)
 
-    def _get(self, method: RequestMethod, *args, **kwargs) -> ResponseProtocol:
+    def _get(self, method: RequestMethod, args, kwargs) -> ResponseProtocol:
         if self._index >= len(self._expected_traffic):
             raise Exception(
                 f"Expected {len(self._expected_traffic)} requests. "
