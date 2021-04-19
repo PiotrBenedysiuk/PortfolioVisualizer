@@ -106,6 +106,9 @@ class DeGiroWrapper:
             data=serialized_ids,
         )
 
+        if "data" not in product_info_response.json():
+            raise Exception(f"No products found with ids {ids}.")
+
         return {
             int(identifier): ProductInfo(
                 id=int(product["id"]),

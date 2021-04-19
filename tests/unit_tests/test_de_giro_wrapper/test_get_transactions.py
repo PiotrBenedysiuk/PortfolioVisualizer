@@ -58,8 +58,18 @@ class TestGetTransactions(TestCase):
 
     def test_happy_path(self) -> None:
         raw_data = [
-            {"productId": 1, "quantity": 1, "date": "1970-01-01T01:00:00+01:00"},
-            {"productId": 1, "quantity": -1, "date": "1970-01-01T01:00:01+01:00"},
+            {
+                "productId": 1,
+                "quantity": 1,
+                "date": "1970-01-01T01:00:00+01:00",
+                **self._dict_padding,
+            },
+            {
+                "productId": 1,
+                "quantity": -1,
+                "date": "1970-01-01T01:00:01+01:00",
+                **self._dict_padding,
+            },
         ]
 
         mock_response = MockJsonResponse(status_code=200, _json={"data": raw_data})
