@@ -5,11 +5,11 @@ import json
 import typing
 
 import pytz
-import requests
 
 from .product_info import ProductInfo
 from .transaction import Transaction
 from ..currency import Currency
+from ..requests_wrapper.requests_protocol import RequestsProtocol
 
 __all__ = ("DeGiroWrapper",)
 
@@ -24,9 +24,10 @@ class DeGiroWrapper:
         "https://trader.degiro.nl/product_search/secure/v5/products/info"
     )
 
-    def __init__(self, user: str, password: str) -> None:
+    def __init__(self, user: str, password: str, requests: RequestsProtocol) -> None:
         self._user = user
         self._password = password
+        self._requests = requests
         self._session_id: typing.Optional[str] = None
         self._account_id: typing.Optional[int] = None
 
@@ -42,11 +43,11 @@ class DeGiroWrapper:
             "isPassCodeReset": False,
             "isRedirectToMobile": False,
         }
-        response = requests.post(url=DeGiroWrapper._LOGIN_URL, json=json_params)
+        response = self._requests.post(url=DeGiroWrapper._LOGIN_URL, json=json_params)
         self._session_id = response.json()["sessionId"]
 
     def _get_client_info(self) -> None:
-        response = requests.get(
+        response = self._requests.get(
             url=DeGiroWrapper._CLIENT_INFO_URL, params={"sessionId": self._session_id}
         )
         self._account_id = response.json()["data"]["intAccount"]
@@ -56,7 +57,7 @@ class DeGiroWrapper:
 
     def _logout(self) -> None:
         logout_params = {"intAccount": self._account_id, "sessionId": self._session_id}
-        requests.get(
+        self._requests.get(
             url=f"{DeGiroWrapper._LOGOUT_URL};jsessionid={self._session_id}",
             params=logout_params,
         )
@@ -72,10 +73,9 @@ class DeGiroWrapper:
             "sessionId": self._session_id,
         }
 
-        transaction_response = requests.get(
+        transaction_response = self._requests.get(
             url=DeGiroWrapper._TRANSACTIONS_URL, params=transactions_parameters
         )
-
         return [
             Transaction(
                 product_id=transaction["productId"],
@@ -99,12 +99,15 @@ class DeGiroWrapper:
         headers = {"content-type": "application/json"}
         serialized_ids = json.dumps(list(ids))
 
-        product_info_response = requests.post(
+        product_info_response = self._requests.post(
             url=DeGiroWrapper._PRODUCT_INFO_URL,
             headers=headers,
             params=product_info_parameters,
             data=serialized_ids,
         )
+
+        if "data" not in product_info_response.json():
+            raise Exception(f"No products found with ids {ids}.")
 
         return {
             int(identifier): ProductInfo(
